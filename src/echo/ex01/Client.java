@@ -1,8 +1,15 @@
 package echo.ex01;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
 
@@ -18,6 +25,30 @@ public class Client {
 		socket.connect(new InetSocketAddress("192.168.0.62", 10001));
 		
 		System.out.println("[서버에 연결되었습니다.]");
+		
+		//메세지 보내기용 스트림
+		OutputStream os = socket.getOutputStream();
+		OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+		BufferedWriter bw = new BufferedWriter(osw);
+		
+		//키보드 입력
+		Scanner sc = new Scanner(System.in);
+		String str = sc.nextLine();
+		
+		bw.write(str);
+		bw.newLine();
+		bw.flush();
+		
+		//메세지 받기용 스트림
+		InputStream is = socket.getInputStream();
+		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+		BufferedReader br = new BufferedReader(isr);
+		
+		String reMsg= br.readLine();
+		System.out.println("server:["+ reMsg + "]");
+		
+		
+		sc.close();
 		
 		socket.close();
 		
